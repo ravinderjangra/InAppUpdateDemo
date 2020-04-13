@@ -12,7 +12,8 @@ namespace InAppUpdateDemo
         {
             InitializeComponent();
             Distribute.ReleaseAvailable = OnReleaseAvailable;
-            MainPage = new MainPage();
+            AppCenter.Start("android=_ANDROID_APP_CENTER_SECRET_", typeof(Distribute));
+            MainPage = new NavigationPage(new MainPage());
         }
 
         private bool OnReleaseAvailable(ReleaseDetails releaseDetails)
@@ -58,7 +59,6 @@ namespace InAppUpdateDemo
 
         protected override void OnStart()
         {
-            AppCenter.Start("android={_ANDROID_APP_CENTER_SECRET_}", typeof(Distribute));
         }
 
         protected override void OnSleep()
