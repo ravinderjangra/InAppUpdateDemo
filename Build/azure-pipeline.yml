@@ -8,7 +8,7 @@ trigger:
     - master
 
 jobs:
-  - job: Android build and release
+  - job: android_build_and_release
     pool:
         vmImage: macos-10.14
     steps:
