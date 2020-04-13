@@ -41,6 +41,14 @@ jobs:
         projectFile: InAppUpdateDemo.Android/InAppUpdateDemo.Android.csproj
         outputDirectory: '$(build.binariesdirectory)/$(BuildConfiguration)'
         configuration: '$(BuildConfiguration)'
+    - task: AndroidSigning@3
+      displayName: 'Signing and aligning APK file(s) $(build.binariesdirectory)/$(BuildConfiguration)/*.apk'
+      inputs:
+        apkFiles: '$(Parameters.appFiles)'
+        apksignerKeystoreFile: 'TestingSigningCertificate.keystore'
+        apksignerKeystorePassword: '$(cer_pwd)'
+        apksignerKeystoreAlias: '$(cert_alias)'
+        apksignerKeyPassword: '$(cer_pwd)'
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
       inputs:

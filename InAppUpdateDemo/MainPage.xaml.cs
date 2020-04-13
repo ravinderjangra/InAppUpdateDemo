@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Microsoft.AppCenter.Distribute;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -12,6 +13,10 @@ namespace InAppUpdateDemo
         public MainPage()
         {
             InitializeComponent();
+            CheckAppUpdateButton.Clicked += (s, e) =>
+            {
+                Distribute.CheckForUpdate();
+            };
         }
 
         protected override void OnAppearing()
