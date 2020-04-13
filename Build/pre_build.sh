@@ -1,5 +1,5 @@
 
-APP_START_FILE = "../InAppUpdateDemo/AppCenter.xaml.cs"
+APP_START_FILE="InAppUpdateDemo/App.xaml.cs"
 
 ANDROID_APPCENTER_SECRET_PLACEHOLDER="_ANDROID_APP_CENTER_SECRET_"
 IOS_APPCENTER_SECRET_PLACEHOLDER="_IOS_APP_CENTER_SECRET_"
@@ -14,6 +14,6 @@ if [ -e "$APP_START_FILE" ] ; then
 	echo "Resulting file content:"
 	cat $APP_START_FILE
 else
-    echo "Error! File nor found"
+    echo "Error! File not found"
 	exit
 fi
