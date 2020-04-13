@@ -1,0 +1,49 @@
+variables:
+  MONO_VERSION: 6_4_0
+  NETCORE_TEST_VERSION: '2.2.x'
+
+trigger:
+  branches:
+    include:
+    - master
+
+jobs:
+  - jobs: Android build and release
+    pool:
+        vmImage: macos-10.14
+    steps:
+    - bash: |
+        sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh $(MONO_VERSION)
+        mono --version
+      displayName: 'Set mono version'
+      condition: and(succeeded(), eq(variables['imageName'], 'macos-10.14'))
+    - task: UseDotNet@2
+      displayName: 'Use .Net Core sdk $(NETCORE_TEST_VERSION)'
+      inputs:
+        version: $(NETCORE_TEST_VERSION)
+    - task: NuGetToolInstaller@1
+      displayName: 'Use NuGet 5.x'
+      inputs:
+        versionSpec: 5.x
+    - task: NuGetCommand@2
+      displayName: 'NuGet restore'
+    - bash: |
+        bash pre_build.sh
+      workingDirectory: Build
+      displayName: 'Update App Secret'
+    - task: VSBuild@1
+      displayName: 'Build solution **\*.sln'
+      inputs:
+        platform: 'any cpu'
+        configuration: release
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+      inputs:
+        SourceFolder: '$(Build.SourcesDirectory)'
+        Contents: '**/*.apk'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+        flattenFolders: true
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: package'
+      inputs:
+        ArtifactName: package
