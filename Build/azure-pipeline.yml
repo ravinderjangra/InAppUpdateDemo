@@ -1,6 +1,7 @@
 variables:
   MONO_VERSION: 6_4_0
   NETCORE_TEST_VERSION: '2.2.x'
+  BuildConfiguration: 'Release'
 
 trigger:
   branches:
@@ -10,7 +11,11 @@ trigger:
 jobs:
   - job: android_build_and_release
     pool:
-        vmImage: macos-10.14
+        vmImage: macOS-10.14
+        demands:
+        - MSBuild
+        - Xamarin.Android
+        - AndroidSDK
     steps:
     - bash: |
         sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh $(MONO_VERSION)
@@ -31,19 +36,20 @@ jobs:
         bash pre_build.sh
       workingDirectory: Build
       displayName: 'Update App Secret'
-    - task: VSBuild@1
-      displayName: 'Build solution **\*.sln'
+    - task: XamarinAndroid@1
+      displayName: 'Build Android project'
       inputs:
-        platform: 'any cpu'
-        configuration: release
+        projectFile: InAppUpdateDemo.Android/InAppUpdateDemo.Android.csproj
+        outputDirectory: '$(build.binariesdirectory)/$(BuildConfiguration)'
+        configuration: '$(BuildConfiguration)'
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
       inputs:
-        SourceFolder: '$(Build.SourcesDirectory)'
+        SourceFolder: '$(build.binariesdirectory)/$(BuildConfiguration)'
         Contents: '**/*.apk'
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
         flattenFolders: true
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: package'
       inputs:
-        ArtifactName: package
+        ArtifactName: Android
