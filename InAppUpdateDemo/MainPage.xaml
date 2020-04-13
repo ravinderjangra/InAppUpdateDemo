@@ -9,10 +9,13 @@
              mc:Ignorable="d">
     <StackLayout Padding="20"
                  HorizontalOptions="FillAndExpand"
+                 Spacing="20"
                  VerticalOptions="FillAndExpand">
         <!--  Place new controls here  -->
         <Button x:Name="CheckAppUpdateButton"
                 Text="Check for new update" />
-        <Label x:Name="AppVersionLabel" />
+        <Label x:Name="AppVersionLabel"
+               FontSize="Medium"
+               HorizontalTextAlignment="Center" />
     </StackLayout>
 </ContentPage>

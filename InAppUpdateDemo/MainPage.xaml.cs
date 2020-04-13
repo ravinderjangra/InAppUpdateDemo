@@ -17,7 +17,7 @@ namespace InAppUpdateDemo
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            AppVersionLabel.Text = AppInfo.VersionString;
+            AppVersionLabel.Text = $"App version: {AppInfo.VersionString}";
         }
     }
 }
