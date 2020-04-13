@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.AppCenter;
+using Microsoft.AppCenter.Distribute;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace InAppUpdateDemo
 {
@@ -9,12 +9,12 @@ namespace InAppUpdateDemo
         public App()
         {
             InitializeComponent();
-
             MainPage = new MainPage();
         }
 
         protected override void OnStart()
         {
+            AppCenter.Start("android={_ANDROID_APP_CENTER_SECRET_}", typeof(Distribute));
         }
 
         protected override void OnSleep()

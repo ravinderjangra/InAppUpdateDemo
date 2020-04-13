@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace InAppUpdateDemo
@@ -16,6 +12,12 @@ namespace InAppUpdateDemo
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            AppVersionLabel.Text = AppInfo.VersionString;
         }
     }
 }
