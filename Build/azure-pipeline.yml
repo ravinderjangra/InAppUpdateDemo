@@ -2,7 +2,6 @@ variables:
   MONO_VERSION: 6_4_0
   NETCORE_TEST_VERSION: '2.2.x'
   BuildConfiguration: 'Release'
-  ANDROID_APPCENTER_APP_SECRET: '$(ANDROID_APPCENTER_SECRET)'
 
 trigger:
   branches:
@@ -34,6 +33,8 @@ jobs:
       displayName: 'NuGet restore'
     - bash: |
         bash ./Build/pre_build.sh
+      env:
+        ANDROID_APPCENTER_APP_SECRET: $(ANDROID_APPCENTER_SECRET)
       displayName: 'Update App Secret'
     - task: XamarinAndroid@1
       displayName: 'Build Android project'
