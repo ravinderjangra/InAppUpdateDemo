@@ -32,8 +32,7 @@ jobs:
     - task: NuGetCommand@2
       displayName: 'NuGet restore'
     - bash: |
-        bash pre_build.sh
-      workingDirectory: Build
+        bash ./Build/pre_build.sh
       displayName: 'Update App Secret'
     - task: XamarinAndroid@1
       displayName: 'Build Android project'
