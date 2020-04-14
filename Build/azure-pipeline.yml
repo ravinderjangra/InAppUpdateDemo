@@ -72,7 +72,7 @@ jobs:
         releaseNotesInput: 'New release'
         distributionGroupId: $(AndroidDistributionGroupId)
         isSilent: false
-      condition: and(succeeded(), contains(variables['Build.SourceVersionMessage'], 'version change'))
+      condition: and(succeeded(), and(contains(variables['Build.SourceVersionMessage'], 'version change'), contains(variables['Build.SourceVersionMessage'], 'android')))
   
   - job: ios_build_and_release
     pool:
@@ -137,4 +137,4 @@ jobs:
         releaseNotesInput: 'New release'
         distributionGroupId: $(iOSDistributionGroupId)
         isSilent: false
-      condition: and(succeeded(), contains(variables['Build.SourceVersionMessage'], 'version change'))
+      condition: and(succeeded(), and(contains(variables['Build.SourceVersionMessage'], 'version change'), contains(variables['Build.SourceVersionMessage'], 'ios')))
