@@ -34,5 +34,16 @@
 	<string>InAppUpdateDemo</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
+	<key>AppCenterAppDelegateForwarderEnabled</key>
+	<string>0</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>appcenter-2a58c53e-e82c-42fd-8053-4c8b181e799b</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
