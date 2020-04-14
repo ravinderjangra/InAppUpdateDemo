@@ -73,4 +73,68 @@ jobs:
         distributionGroupId: $(AndroidDistributionGroupId)
         isSilent: false
       condition: and(succeeded(), contains(variables['Build.SourceVersionMessage'], 'version change'))
-
+  
+  - job: ios_build_and_release
+    pool:
+        vmImage: macOS-10.14
+        demands:
+        - xcode
+        - Xamarin.iOS
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Use .Net Core sdk 3.0.x'
+      inputs:
+        version: 3.0.x
+    - bash: |
+        sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh $(MONO_VERSION)
+        mono --version
+      displayName: 'Set mono version'
+    - task: InstallAppleCertificate@2
+      displayName: 'Install an Apple certificate'
+      inputs:
+        certSecureFile: 'iOS Ad-hoc Dec 2019.p12'
+        certPwd: '$(P12password)'
+    - task: InstallAppleProvisioningProfile@1
+      displayName: 'Install an Apple provisioning profile'
+      inputs:
+        provProfileSecureFile: 'iOS Ad-hoc Dec 2019.mobileprovision'
+    - task: NuGetToolInstaller@1
+      displayName: 'Use NuGet 5.x'
+      inputs:
+        versionSpec: 5.x
+    - task: NuGetCommand@2
+      displayName: 'NuGet restore'
+    - bash: |
+        bash ./Build/pre_build.sh
+      env:
+        IOS_APPCENTER_APP_SECRET: $(IOS_APPCENTER_SECRET)
+      displayName: 'Update App Secret'
+    - task: XamariniOS@2
+      displayName: 'Build iOS Project'
+      inputs:
+        solutionFile: InAppUpdateDemo.iOS/InAppUpdateDemo.iOS.csproj
+        signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
+        signingProvisioningProfileID: '$(APPLE_PROV_PROFILE_UUID)'
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+      inputs:
+        SourceFolder: '$(system.defaultworkingdirectory)'
+        Contents: '**/*.ipa'
+        TargetFolder: '$(build.artifactstagingdirectory)'
+        flattenFolders: true
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: package'
+      inputs:
+        ArtifactName: Android
+    - task: AppCenterDistribute@3
+      displayName: 'Deploy **/*.ipa to Visual Studio App Center'
+      inputs:
+        serverEndpoint: 'InAppDemoAppCenterConnection'
+        appSlug: 'ravinderjangra/InAppUpdateDemo-iOS'
+        appFile: '**/*.ipa'
+        symbolsIncludeParentDirectory: false
+        releaseNotesOption: 'input'
+        releaseNotesInput: 'New release'
+        distributionGroupId: $(iOSDistributionGroupId)
+        isSilent: false
+      condition: and(succeeded(), contains(variables['Build.SourceVersionMessage'], 'version change'))

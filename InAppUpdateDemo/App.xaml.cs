@@ -11,8 +11,12 @@ namespace InAppUpdateDemo
         public App()
         {
             InitializeComponent();
+
+            if (Xamarin.Forms.Device.RuntimePlatform == Xamarin.Forms.Device.iOS)
+                Distribute.UpdateTrack = UpdateTrack.Private;
+
             Distribute.ReleaseAvailable = OnReleaseAvailable;
-            AppCenter.Start("android=_ANDROID_APP_CENTER_SECRET_", typeof(Distribute));
+            AppCenter.Start("ios=_IOS_APP_CENTER_SECRET_;android=_ANDROID_APP_CENTER_SECRET_", typeof(Distribute));
             MainPage = new NavigationPage(new MainPage());
         }
 
