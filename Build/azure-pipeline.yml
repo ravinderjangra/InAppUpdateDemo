@@ -66,11 +66,12 @@ jobs:
       inputs:
         serverEndpoint: 'InAppDemoAppCenterConnection'
         appSlug: 'ravinderjangra/InAppUpdateDemo'
-        appFile: '**/*.apk'
+        appFile: '$(Build.ArtifactStagingDirectory)/*.apk'
         symbolsOption: Android
         releaseNotesOption: 'input'
         releaseNotesInput: 'New release'
         distributionGroupId: $(AndroidDistributionGroupId)
+        isMandatory: true
         isSilent: false
       condition: and(succeeded(), and(contains(variables['Build.SourceVersionMessage'], 'version change'), contains(variables['Build.SourceVersionMessage'], 'android')))
   
@@ -125,16 +126,17 @@ jobs:
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: package'
       inputs:
-        ArtifactName: Android
+        ArtifactName: iOS
     - task: AppCenterDistribute@3
       displayName: 'Deploy **/*.ipa to Visual Studio App Center'
       inputs:
         serverEndpoint: 'InAppDemoAppCenterConnection'
         appSlug: 'ravinderjangra/InAppUpdateDemo-iOS'
-        appFile: '**/*.ipa'
+        appFile: '$(build.artifactstagingdirectory)/*.ipa'
         symbolsIncludeParentDirectory: false
         releaseNotesOption: 'input'
         releaseNotesInput: 'New release'
         distributionGroupId: $(iOSDistributionGroupId)
+        isMandatory: true
         isSilent: false
       condition: and(succeeded(), and(contains(variables['Build.SourceVersionMessage'], 'version change'), contains(variables['Build.SourceVersionMessage'], 'ios')))
